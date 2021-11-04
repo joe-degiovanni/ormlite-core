@@ -440,4 +440,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<modules>
+		<module>ormlite-core-java8</module>
+	</modules>
 </project>
