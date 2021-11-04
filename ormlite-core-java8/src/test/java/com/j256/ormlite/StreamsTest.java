@@ -1,9 +1,6 @@
 package com.j256.ormlite;
 
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.dao.ForeignCollection;
-import com.j256.ormlite.dao.LazyForeignCollection;
-import com.j256.ormlite.field.DataType;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.field.ForeignCollectionField;
 import com.j256.ormlite.table.DatabaseTable;
@@ -14,6 +11,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -33,11 +32,11 @@ public class StreamsTest extends BaseCoreTest {
 
         // when
         Lazy lazy = lazyDao.queryForId(entityWithFourChildren.id);
-        Collection<Foreign> children = lazy.children;
+        List<Foreign> children = lazy.children.stream().collect(Collectors.toList());
 
         // then
-        verify(connectionSource, times(1)).getReadOnlyConnection(any());
-        verify(connectionSource, times(1)).releaseConnection(any());
+        verify(connectionSource, times(3)).getReadOnlyConnection(any());
+        verify(connectionSource, times(3)).releaseConnection(any());
         assertEquals(4, children.size());
     }
 
@@ -54,11 +53,11 @@ public class StreamsTest extends BaseCoreTest {
 
         // when
         LazyOrmlite lazy = lazyDao.queryForId(entityWithFourChildren.id);
-        Collection<ForeignOrmlite> children = lazy.children;
+        List<ForeignOrmlite> children = lazy.children.stream().collect(Collectors.toList());
 
         // then
-        verify(connectionSource, times(1)).getReadOnlyConnection(any());
-        verify(connectionSource, times(1)).releaseConnection(any());
+        verify(connectionSource, times(3)).getReadOnlyConnection(any());
+        verify(connectionSource, times(3)).releaseConnection(any());
         assertEquals(4, children.size());
     }
 
